@@ -83,7 +83,7 @@ def fetch_sj_vacancies(sj_token):
     return wrapper
 
 
-def get_languages_vacancies(fetch_function, languages):
+def get_language_vacancies(fetch_function, languages):
     vacancies = defaultdict(list)
     for language in languages:
         vacancies[language].extend(fetch_function(language))
@@ -122,8 +122,8 @@ def prepare_stat_table(title, vacancies, predict_func):
 def main():
     languages = ["Python", "Java", "JavaScript"]
 
-    hh_language_vacancies = get_languages_vacancies(fetch_hh_vacancies, languages)
-    sj_language_vacancies = get_languages_vacancies(fetch_sj_vacancies(sj_token=os.getenv("SJ_TOKEN")), languages)
+    hh_language_vacancies = get_language_vacancies(fetch_hh_vacancies, languages)
+    sj_language_vacancies = get_language_vacancies(fetch_sj_vacancies(sj_token=os.getenv("SJ_TOKEN")), languages)
 
     hh_table = prepare_stat_table("HH Moscow", hh_language_vacancies, predict_hh_salary)
     sj_table = prepare_stat_table("SuperJob Moscow", sj_language_vacancies, predict_sj_salary)

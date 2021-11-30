@@ -1,6 +1,6 @@
 # Сравниваем вакансии программистов
 
-Проект анализирует данные по вакансиям на [hh.ru](https://hh.ru) и [superjob.ru](https://superjob.ru) и выдаёт результаты ввиде таблиц.
+Проект анализирует данные по вакансиям на [hh.ru](https://hh.ru) и [superjob.ru](https://superjob.ru) и выдаёт результаты в формате таблиц.
 
 ### Как установить
 
@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 ### Как запустить проект:
 
-Для того чтобы запустить проект нужно выставить [переменную окржения](https://ru.hexlet.io/courses/cli-basics/lessons/environment-variables/theory_unit) с названием SJ_TOKEN и равной вашему токену от superjob:
+Чтобы запустить проект, нужно выставить [переменную окржения](https://ru.hexlet.io/courses/cli-basics/lessons/environment-variables/theory_unit) с названием SJ_TOKEN и равной вашему токену от superjob:
 
 ```sh
 export SJ_TOKEN=...

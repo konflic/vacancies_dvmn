@@ -5,15 +5,13 @@ from collections import defaultdict
 from itertools import count
 from terminaltables import AsciiTable
 
-MOSCOW_AREA = 1
 
-
-def get_hh_vacancies_response(request, page=0):
+def get_hh_vacancies_response(request, page=0, area=1):
     vacancies_response = requests.get(
         url="https://api.hh.ru/vacancies",
         params={
             "text": request,
-            "area": MOSCOW_AREA,
+            "area": area,
             "period": 30,
             "currency": "RUR",
             "per_page": 50,

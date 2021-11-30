@@ -91,18 +91,16 @@ def get_language_vacancies(fetch_function, languages):
     return vacancies
 
 
-def prepare_stat_table(title, vacancies, predict_func):
+def prepare_stat_table(title, language_vacancies, predict_func):
     vacancies_table_data = [
         ("Язык программирования", "Вакансий найдено", "Вакансий обработано", "Средняя зарплата")
     ]
 
-    languages = vacancies.keys()
-
-    for language in languages:
-        vacancies_amount = len(vacancies[language])
+    for language, vacancies in language_vacancies.items():
+        vacancies_amount = len(vacancies)
 
         not_zero_salaries = []
-        for vacancy in vacancies[language]:
+        for vacancy in vacancies:
             not_zero_salaries.append(predict_func(vacancy))
 
         vacancies_with_salary = len(not_zero_salaries)

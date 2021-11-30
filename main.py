@@ -9,27 +9,28 @@ MOSCOW_AREA = 1
 
 
 def get_hh_vacancies_response(request, page=0):
-    params = {
-        "text": request,
-        "area": MOSCOW_AREA,
-        "period": 30,
-        "currency": "RUR",
-        "per_page": 50,
-        "page": page
-    }
-    result = requests.get("https://api.hh.ru/vacancies", params=params)
-    result.raise_for_status()
-    return result.json()
+    vacancies_response = requests.get(
+        url="https://api.hh.ru/vacancies",
+        params={
+            "text": request,
+            "area": MOSCOW_AREA,
+            "period": 30,
+            "currency": "RUR",
+            "per_page": 50,
+            "page": page
+        })
+    vacancies_response.raise_for_status()
+    return vacancies_response.json()
 
 
 def fetch_hh_vacancies(request: str):
-    result = []
+    vacancies = []
     first_request = get_hh_vacancies_response(request)
     pages = first_request["pages"]
-    result.extend(first_request["items"])
+    vacancies.extend(first_request["items"])
     for page in range(pages):
-        result.extend(get_hh_vacancies_response(request, page=page)["items"])
-    return result
+        vacancies.extend(get_hh_vacancies_response(request, page=page)["items"])
+    return vacancies
 
 
 def predict_salary(_from, to):
@@ -56,29 +57,28 @@ def predict_sj_salary(vacancy):
 
 
 def get_sj_vacancies_response(request, sj_token, page=0):
-    params = {
-        "keyword": request,
-        "town": "Москва",
-        "period": 30,
-        "count": 50,
-        "page": page
-    }
-    result = requests.get(
+    vacancies_response = requests.get(
         url="https://api.superjob.ru/2.0/vacancies",
         headers={"X-Api-App-Id": sj_token},
-        params=params
+        params={
+            "keyword": request,
+            "town": "Москва",
+            "period": 30,
+            "count": 50,
+            "page": page
+        }
     )
-    result.raise_for_status()
-    return result.json()
+    vacancies_response.raise_for_status()
+    return vacancies_response.json()
 
 
 def fetch_sj_vacancies(sj_token):
-    result = []
+    vacancies = []
 
     def wrapper(request):
         for page in count():
             data = get_sj_vacancies_response(request, page=page, sj_token=sj_token)
-            result.extend(data['objects'])
+            vacancies.extend(data['objects'])
             if not data["more"]:
                 break
 
@@ -93,7 +93,7 @@ def get_languages_vacancies(fetch_function, languages):
 
 
 def prepare_stat_table(title, vacancies, predict_func):
-    table_data = [
+    vacancies_table_data = [
         ("Язык программирования", "Вакансий найдено", "Вакансий обработано", "Средняя зарплата")
     ]
 
@@ -101,11 +101,13 @@ def prepare_stat_table(title, vacancies, predict_func):
 
     for language in languages:
         vacancies_amount = len(vacancies["language"])
-        not_zero_salaries = [predict_func(vac) for vac in vacancies["language"] if predict_func(vac)]
+        not_zero_salaries = [
+            predict_func(vacancy) for vacancy in vacancies["language"] if predict_func(vacancy)
+        ]
         vacancies_with_salary = len(not_zero_salaries)
 
         if vacancies_with_salary:
-            table_data.append(
+            vacancies_table_data.append(
                 (
                     language,
                     vacancies_amount,
@@ -114,9 +116,9 @@ def prepare_stat_table(title, vacancies, predict_func):
                 )
             )
 
-    table = AsciiTable(table_data, title)
-    table.justify_columns[2] = 'left'
-    return table
+    vacancies_table = AsciiTable(vacancies_table_data, title)
+    vacancies_table.justify_columns[2] = 'left'
+    return vacancies_table
 
 
 def main():

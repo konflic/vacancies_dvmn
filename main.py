@@ -122,11 +122,10 @@ def prepare_stat_table(title, vacancies, predict_func):
 
 
 def main():
-    SJ_TOKEN = os.getenv("SJ_TOKEN")
     languages = ["Python", "Java", "JavaScript"]
 
     hh_language_vacancies = get_languages_vacancies(fetch_hh_vacancies, languages)
-    sj_language_vacancies = get_languages_vacancies(fetch_sj_vacancies(sj_token=SJ_TOKEN), languages)
+    sj_language_vacancies = get_languages_vacancies(fetch_sj_vacancies(sj_token=os.getenv("SJ_TOKEN")), languages)
 
     hh_table = prepare_stat_table("HH Moscow", hh_language_vacancies, predict_hh_salary)
     sj_table = prepare_stat_table("SuperJob Moscow", sj_language_vacancies, predict_sj_salary)

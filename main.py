@@ -76,7 +76,7 @@ def fetch_sj_vacancies(sj_token):
         vacancies = []
         for page in count():
             data = get_sj_vacancies_response(request, page=page, sj_token=sj_token)
-            vacancies.extend(data['objects'])
+            vacancies.extend(data["objects"])
             if not data["more"]:
                 break
         return vacancies
@@ -116,7 +116,7 @@ def prepare_stat_table(title, language_vacancies, predict_func):
             )
 
     vacancies_table = AsciiTable(vacancies_table_data, title)
-    vacancies_table.justify_columns[2] = 'left'
+    vacancies_table.justify_columns[2] = "left"
     return vacancies_table
 
 
@@ -133,5 +133,5 @@ def main():
     print(sj_table.table)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -71,14 +71,15 @@ def get_sj_vacancies_response(request, sj_token, page=0):
 
 
 def fetch_sj_vacancies(sj_token):
-    vacancies = []
 
     def wrapper(request):
+        vacancies = []
         for page in count():
             data = get_sj_vacancies_response(request, page=page, sj_token=sj_token)
             vacancies.extend(data['objects'])
             if not data["more"]:
                 break
+        return vacancies
 
     return wrapper
 
@@ -98,10 +99,12 @@ def prepare_stat_table(title, vacancies, predict_func):
     languages = vacancies.keys()
 
     for language in languages:
-        vacancies_amount = len(vacancies["language"])
-        not_zero_salaries = [
-            predict_func(vacancy) for vacancy in vacancies["language"] if predict_func(vacancy)
-        ]
+        vacancies_amount = len(vacancies[language])
+
+        not_zero_salaries = []
+        for vacancy in vacancies[language]:
+            not_zero_salaries.append(predict_func(vacancy))
+
         vacancies_with_salary = len(not_zero_salaries)
 
         if vacancies_with_salary:
@@ -110,7 +113,7 @@ def prepare_stat_table(title, vacancies, predict_func):
                     language,
                     vacancies_amount,
                     vacancies_with_salary,
-                    int(sum(not_zero_salaries)) / vacancies_with_salary,
+                    int(sum(not_zero_salaries) / vacancies_with_salary),
                 )
             )
 
